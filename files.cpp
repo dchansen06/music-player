@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -19,20 +20,28 @@ int main()
 	if (path.string().substr(0, 1) == "~")
 		path = getenv("HOME") + path.string().substr(1);
 
-	cout << "Root path " << path.root_path() << endl;
-	cout << "Root name " << path.root_name() << endl;
-	cout << "Root directory " << path.root_directory() << endl;
-	cout << "Relative path " << path.relative_path() << endl;
-	cout << "Parent path " << path.parent_path() << endl;
-	cout << "Filename " << path.filename() << endl;
-	cout << "Stem " << path.stem() << endl;
-	cout << "Extension " << path.extension() << endl;
+	cerr << "Root path " << path.root_path() << endl;
+	cerr << "Root name " << path.root_name() << endl;
+	cerr << "Root directory " << path.root_directory() << endl;
+	cerr << "Relative path " << path.relative_path() << endl;
+	cerr << "Parent path " << path.parent_path() << endl;
+	cerr << "Filename " << path.filename() << endl;
+	cerr << "Stem " << path.stem() << endl;
+	cerr << "Extension " << path.extension() << endl;
 
-	vector<filesystem:directory_entry> validfiles;
+	vector<filesystem::path> validfiles;
 
-	for (const filesystem::directory_entry& dir_entry : filesystem::recursive_directory_iterator(path))
-		if (filesystem::is_regular_file(dir_entry) && dir_entry().extension() == "mp3")
-			std::cout << dir_entry << '\n';
+	filesystem::recursive_directory_iterator rdi_itr = filesystem::recursive_directory_iterator(path, filesystem::directory_options::skip_permission_denied);
+	filesystem::recursive_directory_iterator it_rdi = begin(rdi_itr);
+	while (it_rdi != end(rdi_itr)) {
+		if (it_rdi->path().extension() == ".MP3" || it_rdi->path().extension() == ".mp3")
+			validfiles.push_back(it_rdi->path());
+
+		it_rdi++;
+	}
+
+	for (filesystem::path p : validfiles)
+		cout << p << endl;
 
 	std::filesystem::remove_all("sandbox");
 }
