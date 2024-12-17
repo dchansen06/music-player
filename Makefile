@@ -1,13 +1,18 @@
-CXX=g++
-CXXFLAGS=-Wall -Wextra
-SDLFLAGS=-lSDL2 -lSDL2_mixer
+CXX = g++
+CXXFLAGS = -Wall -Wextra
+LIBS = -lSDL2 -lSDL2_mixer
+OBJ = main.o functions.o
 
+.DELETE_ON_ERROR:
 .PHONY: all clean
 
-all: main
+all: prog
 
-main: main.cpp
-	$(CXX) $(CXXFLAGS) -o $(@) $(^) $(SDLFLAGS)
+%.o: %.cpp
+	$(CXX) -c $(CXXFLAGS) -o $(@) $(^) $(LIBS)
+
+prog: $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $(@) $(^) $(LIBS)
 
 clean:
-	rm main
+	rm prog *.o
