@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+
 using namespace std;
 
 vector<filesystem::path> findValidFiles()
@@ -41,10 +44,65 @@ vector<filesystem::path> findValidFiles()
 	return validfiles;
 }
 
+string toLower(string s)
+{
+	string result = "";
+
+	for(char c : s)
+		result += tolower(c);
+
+	return result;
+}
+
+void playMusic(filesystem::path path)
+{
+	int result = 0;
+	int flags = MIX_INIT_MP3;
+	string ext = toLower(path.extension());
+
+
+	if (ext ==  ".flac")
+		flags = MIX_INIT_FLAC;
+	else if (ext == ".mod")
+		flags = MIX_INIT_MOD;
+	else if (ext == ".mp3")
+		flags = MIX_INIT_MP3;
+	else if (ext == ".ogg")
+		flags == MIX_INIT_OGG;
+	else if (ext == ".mid")
+		flags == MIX_INIT_MID;
+	else if (ext == ".opus")
+		flags == MIX_INIT_OPUS;
+	else if (ext == ".wv" || ext == ".wvc")
+		flags == MIX_INIT_WAVEPACK;
+
+	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+		cerr << "Failed to init SDL\n";
+		exit(1);
+	}
+
+	if (flags != Mix_Init(flags)) {
+		cerr << "Could not initialize mixer, Mix_Init: " << Mix_GetError() << endl;
+		exit(1);
+	}
+
+	Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
+	Mix_Music *music = Mix_LoadMUS(path.c_str());
+	Mix_PlayMusic(music, 1);
+
+	while (!SDL_QuitRequested())
+		SDL_Delay(250);
+
+	Mix_FreeMusic(music);
+	SDL_Quit();
+}
+
 int main()
 {
 	vector<filesystem::path> validfiles = findValidFiles();
 
-	for (filesystem::path p : validfiles)
+	for (filesystem::path p : validfiles) {
 		cout << p << endl;
+		playMusic(p);
+	}
 }
