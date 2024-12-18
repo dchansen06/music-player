@@ -1,15 +1,32 @@
-#include <cstdlib>
-#include <filesystem>
-#include <iostream>
-#include <string>
-#include <vector>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
-using namespace std;
+#include <iostream>
+#include <string>
+#include <filesystem>
+#include <vector>
+#include <random>
+#include <algorithm>
+
+#include <cstdlib>
+#include <csignal>
 
 #include "functions.h"
+
+using namespace std;
+
+sig_atomic_t signalStatus;
+void signal_handler(int signal)
+{
+	signalStatus = signal;
+}
+
+void shuffleMusic(vector<filesystem::path>& files)
+{
+	random_device rand_dev;
+	default_random_engine rand_eng(rand_dev());
+	shuffle(files.begin(), files.end(), rand_eng);
+}
 
 vector<filesystem::path> findValidFiles()
 {
@@ -69,17 +86,7 @@ vector<filesystem::path> findValidFiles()
 	return validfiles;
 }
 
-string toLower(string s)
-{
-	string result = "";
-
-	for(char c : s)
-		result += tolower(c);
-
-	return result;
-}
-
-void playMusic(vector<filesystem::path> paths)
+void playMusic(vector<filesystem::path> paths, int fadeMS)
 {
 	Mix_Music *music;
 
@@ -88,26 +95,39 @@ void playMusic(vector<filesystem::path> paths)
 		exit(1);
 	}
 
-	if (Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640) < 0) {
+	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096) < 0) {
 		cerr << "Could not open audio: " << SDL_GetError() << endl;
 		exit(1);
 	}
 
+	int audio_rate, audio_channels;
+	SDL_AudioFormat audio_format;
+	Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
+	cout << "Opened audio at " << audio_rate << " Hz, "
+		<< (audio_format&0xFF) << " bit" << (SDL_AUDIO_ISFLOAT(audio_format) ? " (float), " : ", ")
+		<< ((audio_channels > 2) ? "surround" : (audio_channels > 1) ? "stereo" : "mono") << endl;
+
 	for (filesystem::path path : paths) {
-		cout << "Starting ... " << path;
+		cout << "Starting ... " << path << " ";
 
 		music = Mix_LoadMUS(path.c_str());
 
-		if (!Mix_FadeInMusic(music, 1, 250)) {
-			cerr << "Could not start music: " << SDL_GetError() << endl;
+		if (Mix_FadeInMusic(music, 1, fadeMS) < 0) {
+			cerr << "Could not play music: " << SDL_GetError() << endl;
 			exit(1);
 		}
 
-		cout << " ... Started" << endl;
+		cout << "... Started" << endl;
 
-		while (!SDL_QuitRequested() && (Mix_PlayingMusic() || Mix_PausedMusic()))
-			SDL_Delay(250);
+		signal(SIGINT, signal_handler);
 
+		while (signalStatus != SIGINT && (Mix_MusicDuration(music) - Mix_GetMusicPosition(music)) * 1000 > fadeMS)
+			SDL_Delay(fadeMS);
+
+		if (signalStatus == SIGINT)
+			signalStatus = SIGUSR1;
+
+		Mix_FadeOutMusic(fadeMS);
 		Mix_FreeMusic(music);
 	}
 

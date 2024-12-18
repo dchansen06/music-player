@@ -1,16 +1,14 @@
-#include <cstdlib>
-#include <filesystem>
 #include <iostream>
-#include <string>
+#include <filesystem>
 #include <vector>
 
-using namespace std;
-
 #include "functions.h"
+
+using namespace std;
 
 int main()
 {
 	vector<filesystem::path> validfiles = findValidFiles();
-
-	playMusic(validfiles);
+	shuffleMusic(validfiles);
+	playMusic(validfiles, 250);
 }
