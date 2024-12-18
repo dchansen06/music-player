@@ -21,14 +21,14 @@ void signal_handler(int signal)
 	signalStatus = signal;
 }
 
-void shuffleMusic(vector<filesystem::path>& files)
+void shuffleMusic(music_list& songs)
 {
 	random_device rand_dev;
 	default_random_engine rand_eng(rand_dev());
-	shuffle(files.begin(), files.end(), rand_eng);
+	shuffle(songs.begin(), songs.end(), rand_eng);
 }
 
-vector<filesystem::path> findMusicFiles()
+music_list findMusicFiles()
 {
 	filesystem::path path;
 	cout << "Enter library path: ";
@@ -39,15 +39,6 @@ vector<filesystem::path> findMusicFiles()
 
 	if (path.string().substr(0, 1) == "~")
 		path = getenv("HOME") + path.string().substr(1);
-
-	cerr << "Root path " << path.root_path() << endl;
-	cerr << "Root name " << path.root_name() << endl;
-	cerr << "Root directory " << path.root_directory() << endl;
-	cerr << "Relative path " << path.relative_path() << endl;
-	cerr << "Parent path " << path.parent_path() << endl;
-	cerr << "Filename " << path.filename() << endl;
-	cerr << "Stem " << path.stem() << endl;
-	cerr << "Extension " << path.extension() << endl;
 
 	vector<filesystem::path> validfiles, nomediadir;
 
@@ -60,25 +51,27 @@ vector<filesystem::path> findMusicFiles()
 		it_rdi++;
 	}
 
+	vector<string> validExtensionTypes = {".ogg", ".mp3", ".wav", ".m4a", ".flac"};
+	for (size_t i = 0; i < (validExtensionTypes.size() + 1) / 2; i++) {
+		string temp = "";
+		for (char c : validExtensionTypes[i])
+			temp += toupper(c);
+		validExtensionTypes.push_back(temp);
+	}
+
 	rdi_itr = filesystem::recursive_directory_iterator(path, filesystem::directory_options::skip_permission_denied);
 	it_rdi = begin(rdi_itr);
 	while (it_rdi != end(rdi_itr)) {
 		bool valid = true;
 		for (filesystem::path badpath : nomediadir) {
-			if (it_rdi->path().string().find(badpath) == string::npos) {
+			if (it_rdi->path().string().find(badpath.string()) != string::npos) {
 				valid = false;
 				break;
 			}
 		}
 
-		if (valid) {
-			cout << "Looking at " << it_rdi->path() << endl;
-
-			if (it_rdi->path().extension() == ".ogg" || it_rdi->path().extension() == ".mp3" || it_rdi->path().extension() == ".wav") {
-				validfiles.push_back(it_rdi->path());
-				cout << "Added " << validfiles[validfiles.size() - 1] << endl;
-			}
-		}
+		if (valid && find(begin(validExtensionTypes), end(validExtensionTypes), it_rdi->path().extension()) != end(validExtensionTypes))
+			validfiles.push_back(it_rdi->path());
 
 		it_rdi++;
 	}
@@ -86,8 +79,13 @@ vector<filesystem::path> findMusicFiles()
 	return validfiles;
 }
 
-void playMusic(vector<filesystem::path> paths, int fadeMS)
+void playMusic(music_list songs, int fadeMS)
 {
+	if (songs.size() == 0) {
+		cerr << "Nothing to play\n";
+		exit(1);
+	}
+
 	Mix_Music *music;
 
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -107,10 +105,10 @@ void playMusic(vector<filesystem::path> paths, int fadeMS)
 		<< (audio_format&0xFF) << " bit" << (SDL_AUDIO_ISFLOAT(audio_format) ? " (float), " : ", ")
 		<< ((audio_channels > 2) ? "surround" : (audio_channels > 1) ? "stereo" : "mono") << endl;
 
-	for (filesystem::path path : paths) {
-		cout << "Starting ... " << path << " ";
+	for (filesystem::path song : songs) {
+		cout << "Starting ... " << song << " ";
 
-		music = Mix_LoadMUS(path.c_str());
+		music = Mix_LoadMUS(song.c_str());
 
 		if (Mix_FadeInMusic(music, 1, fadeMS) < 0) {
 			cerr << "Could not play music: " << SDL_GetError() << endl;

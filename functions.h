@@ -3,8 +3,8 @@
 
 #ifndef FUNCTIONS_H
 	#define FUNCTIONS_H
-	typedef std::filesystem::path musicfile;
-	void shuffleMusic(std::vector<musicfile>& files);
-	std::vector<musicfile> findMusicFiles();
-	void playMusic(std::vector<musicfile> path, int fadeMS);
+	typedef std::vector<std::filesystem::path> music_list;
+	void shuffleMusic(music_list& files);
+	music_list findMusicFiles();
+	void playMusic(music_list path, int fadeMS);
 #endif

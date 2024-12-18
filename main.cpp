@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	vector<musicfile> validmusic = findMusicFiles();
+	music_list validmusic = findMusicFiles();
 	shuffleMusic(validmusic);
 	playMusic(validmusic, 250);
 }
