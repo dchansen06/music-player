@@ -8,5 +8,4 @@
 *.out
 
 # Project specific
-bin
-obj
+build

@@ -4,34 +4,39 @@
 # You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-CXX = g++
+# Heavily inspired by https://stackoverflow.com/a/30602701
+
 CXXFLAGS = -Wall -Wextra
-LIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer
-SERVEROBJ = $(OBJ)/server.o $(OBJ)/server_functions.o
-CLIENTOBJ = $(OBJ)/client.o
-SRC = src
-OBJ = obj
-BIN = bin
+LDLIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer
+
+SRC_DIR = src
+CLIENT_SRC := $(wildcard $(SRC_DIR)/client*.cpp)
+SERVER_SRC := $(wildcard $(SRC_DIR)/server*.cpp)
+
+BUILD_DIR = build
+BIN_DIR = $(BUILD_DIR)/bin
+OBJ_DIR = $(BUILD_DIR)/obj
+CLIENT_OBJ := $(CLIENT_SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+SERVER_OBJ := $(SERVER_SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+
+EXE = $(BIN_DIR)/client $(BIN_DIR)/server
 
 .DELETE_ON_ERROR:
 .PHONY: all clean
 
-all: $(BIN)/server $(BIN)/client
+all: $(EXE)
 
-$(OBJ)/%.o: $(SRC)/%.cpp | $(OBJ)
-	$(CXX) -c $(CXXFLAGS) -o $(@) $(<)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $(^) -o $(@)
 
-$(BIN)/server: $(SERVEROBJ) | $(BIN)
-	$(CXX) $(CXXFLAGS) -o $(@) $(^) $(LIBS)
+$(BIN_DIR)/server: $(SERVER_OBJ) | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) -o $(@)
 
-$(BIN)/client: $(CLIENTOBJ) | $(BIN)
-	$(CXX) $(CXXFLAGS) -o $(@) $(^)
+$(BIN_DIR)/client: $(CLIENT_OBJ) | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(^) -o $(@)
 
-$(BIN):
-	mkdir -p $@
-
-$(OBJ):
+$(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
 clean:
-	rm $(BIN) $(OBJ) -r
+	$(RM) -rv $(BUILD_DIR)
