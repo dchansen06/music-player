@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra
-LIBS = -lSDL2 -lSDL2_mixer
+LIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer
 OBJ = main.o functions.o
 
 .DELETE_ON_ERROR:
