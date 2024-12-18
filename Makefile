@@ -7,22 +7,31 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra
 LIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer
-SERVEROBJ = server.o server_functions.o
-CLIENTOBJ = client.o
+SERVEROBJ = $(OBJ)/server.o $(OBJ)/server_functions.o
+CLIENTOBJ = $(OBJ)/client.o
+SRC = src
+OBJ = obj
+BIN = bin
 
 .DELETE_ON_ERROR:
 .PHONY: all clean
 
-all: server client
+all: $(BIN) $(BIN)/server $(BIN)/client
 
-%.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) -o $(@) $(^)
+$(OBJ)/%.o: $(SRC)/%.cpp | $(OBJ)
+	$(CXX) -c $(CXXFLAGS) -o $(@) $(<)
 
-server: $(SERVEROBJ)
+$(BIN)/server: $(SERVEROBJ) | $(BIN)
 	$(CXX) $(CXXFLAGS) -o $(@) $(^) $(LIBS)
 
-client: $(CLIENTOBJ)
+$(BIN)/client: $(CLIENTOBJ) | $(BIN)
 	$(CXX) $(CXXFLAGS) -o $(@) $(^)
 
+$(BIN):
+	mkdir -p $@
+
+$(OBJ):
+	mkdir -p $@
+
 clean:
-	rm client server *.o
+	rm $(BIN) $(OBJ) -r

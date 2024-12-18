@@ -8,5 +8,5 @@
 *.out
 
 # Project specific
-server
-client
+bin
+obj
