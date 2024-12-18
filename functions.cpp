@@ -28,7 +28,7 @@ void shuffleMusic(vector<filesystem::path>& files)
 	shuffle(files.begin(), files.end(), rand_eng);
 }
 
-vector<filesystem::path> findValidFiles()
+vector<filesystem::path> findMusicFiles()
 {
 	filesystem::path path;
 	cout << "Enter library path: ";
