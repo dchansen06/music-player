@@ -11,11 +11,12 @@
 #include <cstdlib>
 #include <csignal>
 
+#include "music_player.h"
 #include "server_functions.h"
 
 using namespace std;
 
-sig_atomic_t signalStatus = SIGCONT;
+sig_atomic_t signalStatus = RESUME;
 void signal_handler(int signal)
 {
 	signalStatus = signal;
@@ -105,24 +106,23 @@ void playSong(fspath song, int fadeMS)
 		exit(1);
 	}
 
-	signal(SIGINT, signal_handler);		// Skip
-	signal(SIGTSTP, signal_handler);	// Pause
-	signal(SIGCONT, signal_handler);	// Play
-	signal(SIGTERM, signal_handler);	// Exit
+	signal(SKIP, signal_handler);
+	signal(PAUSE, signal_handler);
+	signal(RESUME, signal_handler);
+	signal(EXIT, signal_handler);
 
-	while (signalStatus != SIGINT && signalStatus != SIGTERM && (Mix_MusicDuration(music) - Mix_GetMusicPosition(music)) * 1000 > fadeMS) {
-		if (signalStatus == SIGTSTP) {
+	while (signalStatus != SKIP && signalStatus != EXIT && (Mix_MusicDuration(music) - Mix_GetMusicPosition(music)) * 1000 > fadeMS) {
+		if (signalStatus == PAUSE) {
 			Mix_PauseMusic();
-		} else if (signalStatus == SIGCONT) {
+		} else if (signalStatus == RESUME) {
 			Mix_ResumeMusic();
 		}
 
 		SDL_Delay(fadeMS);
 	}
 
-	if (signalStatus == SIGINT) {
-		signalStatus = SIGCONT;
-		cout << "Skipped\n";
+	if (signalStatus == SKIP) {
+		signalStatus = RESUME;
 	}
 
 	Mix_FadeOutMusic(fadeMS);
@@ -153,7 +153,7 @@ void playMusic(music_list songs, int fadeMS)
 		<< ((audio_channels > 2) ? "surround" : (audio_channels > 1) ? "stereo" : "mono") << endl;
 
 	for (fspath song : songs) {
-		if (signalStatus == SIGTERM)
+		if (signalStatus == EXIT)
 			break;
 
 		playSong(song, fadeMS);

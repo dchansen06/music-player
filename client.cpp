@@ -2,13 +2,15 @@
 #include <csignal>
 #include <string>
 
+#include "music_player.h"
+
 using namespace std;
 
 int main(int argc, char* argv[])
 {
 	int server;
 
-	if (argc == 2 && !kill(stoi(argv[1]), SIGCONT)) {
+	if (argc == 2 && !kill(stoi(argv[1]), RESUME)) {
 		server = stoi(argv[1]);
 	} else {
 		cout << "Enter PID of server: ";
@@ -22,13 +24,13 @@ int main(int argc, char* argv[])
 	while (tolower(input) != 'e') {
 		switch(tolower(input)) {
 			case 'p':
-				kill(server, SIGTSTP);
+				kill(server, PAUSE);
 				break;
 			case 'r':
-				kill(server, SIGCONT);
+				kill(server, RESUME);
 				break;
 			case 's':
-				kill(server, SIGINT);
+				kill(server, SKIP);
 				break;
 			default:
 				cout << "Misunderstood input, enter R, P, S, or E only";
@@ -37,7 +39,7 @@ int main(int argc, char* argv[])
 		cin >> input;
 	}
 
-	kill(server, SIGTERM);
+	kill(server, EXIT);
 
 	return 0;
 }
