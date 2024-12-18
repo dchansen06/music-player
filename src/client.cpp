@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 				kill(server, SKIP);
 				break;
 			default:
-				cout << "Misunderstood input, enter R, P, S, or E only";
+				cout << "Misunderstood input, enter R, P, S, or E only:\n";
 		}
 
 		cin >> input;
