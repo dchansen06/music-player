@@ -6,7 +6,7 @@ OBJ = main.o functions.o
 .DELETE_ON_ERROR:
 .PHONY: all clean
 
-all: prog
+all: player
 
 %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) -o $(@) $(^) $(LIBS)

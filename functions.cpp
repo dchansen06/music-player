@@ -81,7 +81,6 @@ string toLower(string s)
 
 void playMusic(vector<filesystem::path> paths)
 {
-	int flags;
 	Mix_Music *music;
 
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
