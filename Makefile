@@ -16,7 +16,7 @@ BIN = bin
 .DELETE_ON_ERROR:
 .PHONY: all clean
 
-all: $(BIN) $(BIN)/server $(BIN)/client
+all: $(BIN)/server $(BIN)/client
 
 $(OBJ)/%.o: $(SRC)/%.cpp | $(OBJ)
 	$(CXX) -c $(CXXFLAGS) -o $(@) $(<)
