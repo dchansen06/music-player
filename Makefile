@@ -11,8 +11,8 @@ all: prog
 %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) -o $(@) $(^) $(LIBS)
 
-prog: $(OBJ)
+player: $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $(@) $(^) $(LIBS)
 
 clean:
-	rm prog *.o
+	rm player *.o

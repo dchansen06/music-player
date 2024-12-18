@@ -6,4 +6,4 @@ using namespace std;
 
 vector<filesystem::path> findValidFiles();
 string toLower(string s);
-void playMusic(filesystem::path path);
+void playMusic(vector<filesystem::path> path);

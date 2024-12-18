@@ -12,8 +12,5 @@ int main()
 {
 	vector<filesystem::path> validfiles = findValidFiles();
 
-	for (filesystem::path p : validfiles) {
-		cout << p << endl;
-		playMusic(p);
-	}
+	playMusic(validfiles);
 }
