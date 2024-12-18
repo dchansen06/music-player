@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <csignal>
 
-#include "music_player.h"
+#include "signals.h"
 #include "server_functions.h"
 
 using namespace std;

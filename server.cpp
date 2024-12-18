@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 
+#include "signals.h"
 #include "server_functions.h"
 
 using namespace std;

@@ -1,5 +1,7 @@
-#ifndef MUSIC_PLAYER_H
-#define MUSIC_PLAYER_H
+#include <csignal>
+
+#ifndef SIGNALS_H
+#define SIGNALS_H
 	enum Signals {
 		SKIP = SIGINT,
 		PAUSE = SIGTSTP,

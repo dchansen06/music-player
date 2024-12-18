@@ -2,7 +2,7 @@
 #include <csignal>
 #include <string>
 
-#include "music_player.h"
+#include "signals.h"
 
 using namespace std;
 
