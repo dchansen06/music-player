@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup server environemnt
-      run: sudo apt-get install -y libsdl2-mixer-dev
+      run: sudo apt-get install -y --no-install-suggests --no-install-recommends libsdl2-mixer-dev
     - name: Compile server
       run: make server
   client:
