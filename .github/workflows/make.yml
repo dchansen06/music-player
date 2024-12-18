@@ -5,11 +5,17 @@ on:
     branches: ["main"]
 
 jobs:
-  compile:
+  server:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Setup environemnt
+    - name: Setup server environemnt
       run: sudo apt-get install -y libsdl2-mixer-dev
-    - name: Compile everything
-      run: make all
+    - name: Compile server
+      run: make server
+  client:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Compile client
+      run: make client
