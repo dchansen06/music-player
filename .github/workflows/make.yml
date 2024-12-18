@@ -9,5 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Setup environemnt
+      run: sudo apt-get install -y libsdl2-mixer-dev
     - name: Compile everything
       run: make all
