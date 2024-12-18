@@ -12,10 +12,10 @@ jobs:
     - name: Setup server environemnt
       run: sudo apt-get install -y --no-install-suggests --no-install-recommends libsdl2-mixer-dev
     - name: Compile server
-      run: make server
+      run: make build/bin/server
   client:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Compile client
-      run: make client
+      run: make build/bin/client
