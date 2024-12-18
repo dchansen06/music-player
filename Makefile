@@ -4,8 +4,6 @@
 # You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
-# Heavily inspired by https://stackoverflow.com/a/30602701
-
 CXXFLAGS = -Wall -Wextra
 LDLIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer
 
@@ -13,18 +11,19 @@ SRC_DIR = src
 CLIENT_SRC := $(wildcard $(SRC_DIR)/client*.cpp)
 SERVER_SRC := $(wildcard $(SRC_DIR)/server*.cpp)
 
+# Heavily inspired by https://stackoverflow.com/a/30602701
 BUILD_DIR = build
 BIN_DIR = $(BUILD_DIR)/bin
 OBJ_DIR = $(BUILD_DIR)/obj
 CLIENT_OBJ := $(CLIENT_SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 SERVER_OBJ := $(SERVER_SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-EXE = $(BIN_DIR)/client $(BIN_DIR)/server
+PROGRAM = $(BIN_DIR)/client $(BIN_DIR)/server
 
 .DELETE_ON_ERROR:
 .PHONY: all clean
 
-all: $(EXE)
+all: $(PROGRAM)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $(^) -o $(@)
