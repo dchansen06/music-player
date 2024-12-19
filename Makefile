@@ -23,7 +23,7 @@ SERVER_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SERVER_SRC))
 
 all: $(PROGRAM)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | Makefile $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $(^) -o $(@)
 
 $(BIN_DIR)/server: $(SERVER_OBJ) | $(BIN_DIR)
