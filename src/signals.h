@@ -8,9 +8,9 @@ You should have received a copy of the GNU General Public License along with thi
 
 #ifndef SIGNALS_H
 #define SIGNALS_H
-	enum Signals {
+	enum Control_Signals {
 		SKIP = SIGUSR1,
-		TOGGLE = SIGUSR2,
+		REWIND = SIGUSR2,
 		PAUSE = SIGTSTP,
 		RESUME = SIGCONT,
 		EXIT = SIGINT
