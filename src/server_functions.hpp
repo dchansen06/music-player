@@ -7,8 +7,8 @@ You should have received a copy of the GNU General Public License along with thi
 #include <filesystem>
 #include <vector>
 
-#ifndef SERVER_FUNCTIONS_H
-	#define SERVER_FUNCTIONS_H
+#ifndef SERVER_FUNCTIONS_HPP
+	#define SERVER_FUNCTIONS_HPP
 	typedef std::vector<std::filesystem::path> music_list;
 	typedef std::filesystem::path fspath;
 	void shuffleMusic(music_list& files);
