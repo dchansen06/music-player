@@ -6,8 +6,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <csignal>
 
-#ifndef SIGNALS_H
-#define SIGNALS_H
+#ifndef SIGNALS_HPP
+#define SIGNALS_HPP
 	enum Control_Signals {
 		SKIP = SIGUSR1,
 		REWIND = SIGUSR2,
