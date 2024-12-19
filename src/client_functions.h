@@ -6,21 +6,9 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <string>
 
-#include "client_functions.h"
-#include "signals.h"
-
-using namespace std;
-
-int main(int argc, char* argv[])
-{
-	string path, directory;
-
-	int pidInput = getInformation(path, directory, argc, argv);
-
-	if (pidInput == 0)
-		pidInput = setupServer(path, directory);
-
-	controlServer(pidInput);
-
-	return 0;
-}
+#ifndef CLIENT_FUNCTIONS_H
+	#define CLIENT_FUNCTIONS_H
+	int getInformation(std::string& path, std::string& dir, int argc, char* argv[]);
+	int setupServer(std::string path, std::string directory);
+	void controlServer(int server);
+#endif
