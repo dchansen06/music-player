@@ -5,54 +5,29 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 #include <iostream>
-#include <csignal>
 #include <cstdlib>
 #include <string>
-#include <unistd.h>
 
+#include "client_functions.h"
 #include "signals.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-	if (argc != 3) {
-		cerr << "Invalid options\n";
+	string path, directory;
+
+	if (!getInformation(path, directory, argc, argv)) {
+		cerr << "Failed to get information\n";
 		exit(-1);
 	}
 
 	int server = fork();
 
-	if (server == 0) {
-		execl(argv[1], argv[1], argv[2], nullptr);
-	} else {
-		char input;
-		cout << "Gained control of server " << server << "\nEnter instructions: [R]esume, [P]ause, re[W]ind, [S]kip, [E]xit (or Ctrl+C to close)\n";
-		cin >> input;
+	if (server == 0)
+		execl(path.c_str(), path.c_str(), directory.c_str(), nullptr);
 
-		while (tolower(input) != 'e') {
-			switch(tolower(input)) {
-				case 'w':
-					kill(server, REWIND);
-					break;
-				case 'p':
-					kill(server, PAUSE);
-					break;
-				case 'r':
-					kill(server, RESUME);
-					break;
-				case 's':
-					kill(server, SKIP);
-					break;
-				default:
-					cout << "Misunderstood input, enter R, P, S, or E only:\n";
-			}
-
-			cin >> input;
-		}
-
-		kill(server, EXIT);
-	}
+	controlServer(server);
 
 	return 0;
 }

@@ -8,7 +8,7 @@ CXXFLAGS = -Wall -Wextra
 LDLIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer
 
 SRC_DIR = src
-CLIENT_SRC := $(wildcard $(SRC_DIR)/client.cpp)
+CLIENT_SRC := $(wildcard $(SRC_DIR)/client*.cpp)
 SERVER_SRC := $(wildcard $(SRC_DIR)/server*.cpp)
 
 # Heavily inspired by https://stackoverflow.com/a/30602701
@@ -18,7 +18,7 @@ OBJ_DIR = $(BUILD_DIR)/obj
 CLIENT_OBJ := $(CLIENT_SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 SERVER_OBJ := $(SERVER_SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-PROGRAM = $(BIN_DIR)/client $(BIN_DIR)/server $(BIN_DIR)/client2
+PROGRAM = $(BIN_DIR)/client $(BIN_DIR)/server
 
 .DELETE_ON_ERROR:
 .PHONY: all clean
