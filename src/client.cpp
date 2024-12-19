@@ -24,11 +24,14 @@ int main(int argc, char* argv[])
 	}
 
 	char input;
-	cout << "Gained control of server\nEnter instructions: [R]esume, [P]ause, [S]kip, [E]xit (or Ctrl+C to close)\n";
+	cout << "Gained control of server\nEnter instructions: [R]esume, [P]ause, [T]oggle, [S]kip, [E]xit (or Ctrl+C to close)\n";
 	cin >> input;
 
 	while (tolower(input) != 'e') {
 		switch(tolower(input)) {
+			case 't':
+				kill(server, TOGGLE);
+				break;
 			case 'p':
 				kill(server, PAUSE);
 				break;

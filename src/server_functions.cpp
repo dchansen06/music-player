@@ -118,18 +118,16 @@ void playSong(fspath song, int fadeMS)
 	signal(EXIT, signal_handler);
 
 	while (signalStatus != SKIP && signalStatus != EXIT && (Mix_MusicDuration(music) - Mix_GetMusicPosition(music)) * 1000 > fadeMS) {
-		if (signalStatus == PAUSE) {
+		if (signalStatus == PAUSE || (signalStatus == TOGGLE && !Mix_Paused(-1)))
 			Mix_PauseMusic();
-		} else if (signalStatus == RESUME) {
+		else if (signalStatus == RESUME || (signalStatus == TOGGLE && Mix_Paused(-1)))
 			Mix_ResumeMusic();
-		}
 
 		SDL_Delay(fadeMS);
 	}
 
-	if (signalStatus == SKIP) {
+	if (signalStatus == SKIP)
 		signalStatus = RESUME;
-	}
 
 	Mix_FadeOutMusic(fadeMS);
 	Mix_FreeMusic(music);
