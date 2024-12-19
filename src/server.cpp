@@ -7,8 +7,6 @@ You should have received a copy of the GNU General Public License along with thi
 #include <iostream>
 #include <vector>
 
-#include <unistd.h>
-
 #include "signals.h"
 #include "server_functions.h"
 
@@ -16,18 +14,12 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	cout << "PID: " << getpid() << endl;
+	if (argc != 2) {
+		cerr << "Invalid option\n";
+		exit(-1);
+	}
 
-	fspath path;
-
-//	if (argc > 1) {
-		path = argv[1];
-//	} else {
-//		cout << "Enter directory ";
-//		cin >> path;
-//	}
-
-	music_list validmusic = findMusicFiles(path);
+	music_list validmusic = findMusicFiles(argv[1]);
 	shuffleMusic(validmusic);
 	playMusic(validmusic, 250);
 }

@@ -6,7 +6,9 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <iostream>
 #include <csignal>
+#include <cstdlib>
 #include <string>
+#include <unistd.h>
 
 #include "signals.h"
 
@@ -14,41 +16,43 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	int server;
-
-	if (argc == 2 && !kill(stoi(argv[1]), RESUME)) {
-		server = stoi(argv[1]);
-	} else {
-		cout << "Enter PID of server: ";
-		cin >> server;
+	if (argc != 3) {
+		cerr << "Invalid options\n";
+		exit(-1);
 	}
 
-	char input;
-	cout << "Gained control of server\nEnter instructions: [R]esume, [P]ause, re[W]ind, [S]kip, [E]xit (or Ctrl+C to close)\n";
-	cin >> input;
+	int server = fork();
 
-	while (tolower(input) != 'e') {
-		switch(tolower(input)) {
-			case 'w':
-				kill(server, REWIND);
-				break;
-			case 'p':
-				kill(server, PAUSE);
-				break;
-			case 'r':
-				kill(server, RESUME);
-				break;
-			case 's':
-				kill(server, SKIP);
-				break;
-			default:
-				cout << "Misunderstood input, enter R, P, S, or E only:\n";
+	if (server == 0) {
+		execl(argv[1], argv[1], argv[2], nullptr);
+	} else {
+		char input;
+		cout << "Gained control of server " << server << "\nEnter instructions: [R]esume, [P]ause, re[W]ind, [S]kip, [E]xit (or Ctrl+C to close)\n";
+		cin >> input;
+
+		while (tolower(input) != 'e') {
+			switch(tolower(input)) {
+				case 'w':
+					kill(server, REWIND);
+					break;
+				case 'p':
+					kill(server, PAUSE);
+					break;
+				case 'r':
+					kill(server, RESUME);
+					break;
+				case 's':
+					kill(server, SKIP);
+					break;
+				default:
+					cout << "Misunderstood input, enter R, P, S, or E only:\n";
+			}
+
+			cin >> input;
 		}
 
-		cin >> input;
+		kill(server, EXIT);
 	}
-
-	kill(server, EXIT);
 
 	return 0;
 }
