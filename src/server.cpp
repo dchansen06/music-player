@@ -6,7 +6,6 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <iostream>
 
-#include "signals.h"
 #include "server_functions.h"
 
 using namespace std;

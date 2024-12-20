@@ -7,7 +7,6 @@ You should have received a copy of the GNU General Public License along with thi
 #include <string>
 
 #include "client_functions.h"
-#include "signals.h"
 
 using namespace std;
 
