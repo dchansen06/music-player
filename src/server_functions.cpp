@@ -35,6 +35,19 @@ void shuffleMusic(music_list& songs)
 	shuffle(songs.begin(), songs.end(), rand_eng);
 }
 
+MusicInfo getInformation(const Mix_Music* m)
+{
+	MusicInfo info;
+
+	info.title = Mix_GetMusicTitle(m);
+	info.artist = Mix_GetMusicArtistTag(m);
+	info.album = Mix_GetMusicAlbumTag(m);
+	info.copyright = Mix_GetMusicCopyrightTag(m);
+	info.type = Mix_GetMusicType(m);
+
+	return info;
+}
+
 vector<fspath> findNoMedia(fspath path, string pattern)
 {
 	vector<fspath> nomediadir;

@@ -5,13 +5,27 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 #include <filesystem>
+#include <string>
 #include <vector>
+#include <SDL2/SDL_mixer.h>
 
 #ifndef SERVER_FUNCTIONS_H
 	#define SERVER_FUNCTIONS_H
+
 	typedef std::vector<std::filesystem::path> music_list;
 	typedef std::filesystem::path fspath;
+
+	struct MusicInfo {
+		std::string title;
+		std::string artist;
+		std::string album;
+		std::string copyright;
+		std::string type;
+		int numTracks;
+	};
+
 	void shuffleMusic(music_list& files);
+	MusicInfo getInformation(const Mix_Music* m);
 	music_list findMusicFiles(fspath path);
 	void playMusic(music_list path, int fadeMS);
 #endif
