@@ -41,10 +41,21 @@ int getInformation(string& path, string& dir, int argc, char* argv[])
 
 int setupServer(string path, string directory)
 {
-	int server = fork();
+	pid_t server = fork();
 
-	if (server == 0)
+	if (server == 0) {
+		pid_t sid = setsid();
+
+		if (sid < 0) {
+			cerr << "Failed to start server! Could not setsid\n";
+			exit(-1);
+		}
+
 		execl(path.c_str(), path.c_str(), directory.c_str(), nullptr);
+	} else if (server < 0) {
+		cerr << "Failed to start server! Could not fork\n";
+		exit(-1);
+	}
 
 	return server;
 }
