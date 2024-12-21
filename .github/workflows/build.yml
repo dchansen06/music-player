@@ -5,11 +5,15 @@ on:
     branches: ["main"]
 
 jobs:
-  all:
+  make:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup server environemnt
       run: sudo apt-get install -y --no-install-suggests --no-install-recommends libsdl2-mixer-dev libgtkmm-4.0-dev
-    - name: Compile everything (so as to not use multiple apt installs)
-      run: make all
+    - name: Compile server
+      run: make build/bin/server
+    - name: Compile client
+      run: make build/bin/client
+    - name: Compile gui
+      run: make build/bin/gui
