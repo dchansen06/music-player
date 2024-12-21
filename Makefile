@@ -5,7 +5,8 @@
 #
 
 CXXFLAGS = -Wall -Wextra
-LDLIBS = $(shell sdl2-config --libs --cflags) $(shell sdl2-config --libs --cflags)_mixer $(shell pkg-config gtkmm-4.0 --libs --cflags)
+LDLIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer $(shell pkg-config gtkmm-4.0 --libs)
+LDFLAGS = $(shell sdl2-config --cflags) $(shell pkg-config gtkmm-4.0 --cflags)
 
 SRC_DIR = src
 SERVER_SRC = $(wildcard $(SRC_DIR)/server*.cpp)
@@ -26,16 +27,16 @@ GUI_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(GUI_SRC))
 all: $(PROGRAM)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | Makefile $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $(^) $(LDLIBS) -o $(@)
+	$(CXX) $(CXXFLAGS) -c $(^) $(LDLIBS) $(LDFLAGS) -o $(@)
 
 $(BIN_DIR)/server: $(SERVER_OBJ) | $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) -o $(@)
+	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) $(LDFLAGS) -o $(@)
 
 $(BIN_DIR)/client: $(CLIENT_OBJ) | $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) $(^) -o $(@)
+	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) $(LDFLAGS) -o $(@)
 
 $(BIN_DIR)/gui: $(GUI_OBJ) | $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) -o $(@)
+	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) $(LDFLAGS) -o $(@)
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
