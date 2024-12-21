@@ -1,7 +1,7 @@
 [![Build](https://github.com/dchansen06/music-player/actions/workflows/build.yml/badge.svg)](https://github.com/dchansen06/music-player/actions/workflows/build.yml)
 
 # music-player
-A C++ music player built off of SDL2 for playing and controlling music from the terminal
+A C++ music player built off of SDL2 for playing and controlling music from the terminal and from an app.
 
 ## License information
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -24,9 +24,8 @@ Then simply run
 
 ```$ make all```
 
-Use the client and server programs as you would expect, as this is not finalized the runtime instructions are not yet stable, please review the source code for further instructions (sorry).
+Use the client, server, and gui programs as you would expect, as this is not finalized the runtime instructions are not yet stable, please review the source code for further instructions (sorry).
 
 ## To-Do
 * Better documentation
 * Divide into more discrete functions and classes
-* Setup a testing suite
