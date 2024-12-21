@@ -15,7 +15,11 @@ GUI_SRC = $(wildcard $(SRC_DIR)/gui*.cpp) $(filter-out $(SRC_DIR)/client.cpp, $(
 
 BUILD_DIR = build
 BIN_DIR = $(BUILD_DIR)/bin
-PROGRAM = $(BIN_DIR)/server $(BIN_DIR)/client $(BIN_DIR)/gui
+SERVER_BIN = $(BIN_DIR)/server
+CLI_BIN = $(SERVER_BIN) $(BIN_DIR)/client
+GUI_BIN = $(CLI_BIN) $(BIN_DIR)/gui
+PROGRAM = $(CLI_BIN) $(GUI_BIN)
+
 OBJ_DIR = $(BUILD_DIR)/obj
 SERVER_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SERVER_SRC))
 CLIENT_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(CLIENT_SRC))
@@ -32,10 +36,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | Makefile $(OBJ_DIR)
 $(BIN_DIR)/server: $(SERVER_OBJ) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) $(LDFLAGS) -o $(@)
 
-$(BIN_DIR)/client: $(CLIENT_OBJ) | $(BIN_DIR)
+$(BIN_DIR)/client: $(CLIENT_OBJ) | $(BIN_DIR) $(SERVER_BIN)
 	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) $(LDFLAGS) -o $(@)
 
-$(BIN_DIR)/gui: $(GUI_OBJ) | $(BIN_DIR)
+$(BIN_DIR)/gui: $(GUI_OBJ) | $(BIN_DIR) $(CLI_BIN)
 	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) $(LDFLAGS) -o $(@)
 
 $(BIN_DIR) $(OBJ_DIR):
