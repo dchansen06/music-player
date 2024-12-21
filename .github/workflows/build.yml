@@ -11,5 +11,5 @@ jobs:
     - uses: actions/checkout@v4
     - name: Setup server environemnt
       run: sudo apt-get install -y --no-install-suggests --no-install-recommends libsdl2-mixer-dev libgtkmm-4.0-dev
-    - name: Compile everything
+    - name: Compile everything (so as to not use multiple apt installs)
       run: make all
