@@ -57,6 +57,8 @@ int setupServer(string path, string directory)
 			exit(-1);
 		}
 
+		cout << "Server is running as " << getpid() << endl;
+
 		execl(path.c_str(), path.c_str(), directory.c_str(), nullptr);
 	} else if (server < 0) {
 		cerr << "Failed to start server! Could not fork\n";
@@ -64,6 +66,14 @@ int setupServer(string path, string directory)
 	}
 
 	return server;
+}
+
+// Sends a signal to the specified pid
+// Precondition: A valid server pid and a valid signal
+// Postcondition: Sends the signal or fails to if the pid is wrong
+void sendSignal(pid_t server, Control_Signals signal)
+{
+	kill(server, signal);
 }
 
 // Loop to control the server with signals and keyboard instructions, can close server or leave it running and stop controlling it
@@ -78,16 +88,16 @@ void controlServer(int server)
 	while (tolower(input) != 'e') {
 		switch(tolower(input)) {
 			case 'w':
-				kill(server, REWIND);
+				sendSignal(server, REWIND);
 				break;
 			case 'p':
-				kill(server, PAUSE);
+				sendSignal(server, PAUSE);
 				break;
 			case 'r':
-				kill(server, RESUME);
+				sendSignal(server, RESUME);
 				break;
 			case 's':
-				kill(server, SKIP);
+				sendSignal(server, SKIP);
 				break;
 			default:
 				cout << "Misunderstood input, enter R, P, S, or E only:\n";
@@ -98,5 +108,5 @@ void controlServer(int server)
 		cin >> input;
 	}
 
-	kill(server, EXIT);
+	sendSignal(server, EXIT);
 }

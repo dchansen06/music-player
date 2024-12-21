@@ -6,8 +6,11 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <string>
 
+#include "signals.h"
+
 #pragma once
 
 int getInformation(std::string& path, std::string& dir, int argc, char* argv[]);
 int setupServer(std::string path, std::string directory);
+void sendSignal(pid_t server, Control_Signals signal);
 void controlServer(int server);

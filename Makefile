@@ -5,18 +5,20 @@
 #
 
 CXXFLAGS = -Wall -Wextra
-LDLIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer
+LDLIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer $(shell pkg-config gtkmm-4.0 --libs --cflags)
 
 SRC_DIR = src
-CLIENT_SRC = $(wildcard $(SRC_DIR)/client*.cpp)
 SERVER_SRC = $(wildcard $(SRC_DIR)/server*.cpp)
+CLIENT_SRC = $(wildcard $(SRC_DIR)/client*.cpp)
+GUI_SRC = $(wildcard $(SRC_DIR)/gui*.cpp) $(filter-out $(SRC_DIR)/client.cpp, $(CLIENT_SRC))
 
 BUILD_DIR = build
 BIN_DIR = $(BUILD_DIR)/bin
-PROGRAM = $(BIN_DIR)/client $(BIN_DIR)/server
+PROGRAM = $(BIN_DIR)/server $(BIN_DIR)/client $(BIN_DIR)/gui
 OBJ_DIR = $(BUILD_DIR)/obj
-CLIENT_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(CLIENT_SRC))
 SERVER_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SERVER_SRC))
+CLIENT_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(CLIENT_SRC))
+GUI_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(GUI_SRC))
 
 .DELETE_ON_ERROR:
 .PHONY: all clean
@@ -24,13 +26,16 @@ SERVER_OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SERVER_SRC))
 all: $(PROGRAM)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | Makefile $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $(^) -o $(@)
+	$(CXX) $(CXXFLAGS) -c $(^) $(LDLIBS) -o $(@)
 
 $(BIN_DIR)/server: $(SERVER_OBJ) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) -o $(@)
 
 $(BIN_DIR)/client: $(CLIENT_OBJ) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) $(^) -o $(@)
+
+$(BIN_DIR)/gui: $(GUI_OBJ) | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(^) $(LDLIBS) -o $(@)
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
