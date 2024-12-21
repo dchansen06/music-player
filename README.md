@@ -27,9 +27,6 @@ Then simply run
 Use the client and server programs as you would expect, as this is not finalized the runtime instructions are not yet stable, please review the source code for further instructions (sorry).
 
 ## To-Do
-* Fundamentally rewrite client/server
-* Basic GUI functionality
-* Better comments (sorry)
 * Better documentation
 * Divide into more discrete functions and classes
 * Setup a testing suite
