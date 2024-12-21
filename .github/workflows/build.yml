@@ -5,17 +5,11 @@ on:
     branches: ["main"]
 
 jobs:
-  server:
+  all:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup server environemnt
-      run: sudo apt-get install -y --no-install-suggests --no-install-recommends libsdl2-mixer-dev
-    - name: Compile server
-      run: make build/bin/server
-  client:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Compile client
-      run: make build/bin/client
+      run: sudo apt-get install -y --no-install-suggests --no-install-recommends libsdl2-mixer-dev libgtkmm-4.0-dev
+    - name: Compile everything
+      run: make all

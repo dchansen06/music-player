@@ -5,7 +5,7 @@
 #
 
 CXXFLAGS = -Wall -Wextra
-LDLIBS = $(shell sdl2-config --libs) $(shell sdl2-config --libs)_mixer $(shell pkg-config gtkmm-4.0 --libs --cflags)
+LDLIBS = $(shell sdl2-config --libs --cflags) $(shell sdl2-config --libs --cflags)_mixer $(shell pkg-config gtkmm-4.0 --libs --cflags)
 
 SRC_DIR = src
 SERVER_SRC = $(wildcard $(SRC_DIR)/server*.cpp)
