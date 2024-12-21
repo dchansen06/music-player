@@ -13,13 +13,16 @@ You should have received a copy of the GNU General Public License along with thi
 
 using namespace std;
 
+// Reads information from the command line and gathers any missing information
+// Precondition: A valid path, music directory, and command line arguments
+// Postcondition: Returns the PID of the server to use or fills in the path and directory
 int getInformation(string& path, string& dir, int argc, char* argv[])
 {
-	if (argc > 2 && ((string)argv[1]).find("-p") != string::npos) {
+	if (argc > 2 && ((string)argv[1]).find("-p") != string::npos) {	// Must be in the form "command -p PID"
 			return stoi(argv[2]);
 	}
 
-	switch(argc) {
+	switch(argc) {	// Gathers path and directory as provided, leaves off tail end
 		case 3:
 			path = argv[1];
 			dir = argv[2];
@@ -39,6 +42,9 @@ int getInformation(string& path, string& dir, int argc, char* argv[])
 	return 0;
 }
 
+// Starts a new server as a detatched process and returns its PID to signal it
+// Precondition: A valid path and directory for the server to use
+// Postcondition: Returns the PID to signal the server on
 int setupServer(string path, string directory)
 {
 	pid_t server = fork();
@@ -60,11 +66,14 @@ int setupServer(string path, string directory)
 	return server;
 }
 
+// Loop to control the server with signals and keyboard instructions, can close server or leave it running and stop controlling it
+// Precondition: A valid PID of the server
+// Postcondition: Kills the server or leaves it running as this exits on user input
 void controlServer(int server)
 {
 	char input;
 	cout << "Gained control of server " << server << "\nEnter instructions: [R]esume, [P]ause, re[W]ind, [S]kip, [E]xit (or Ctrl+C to close)\n";
-	cin >> input;
+	cin >> input;	// Reads one char at a time
 
 	while (tolower(input) != 'e') {
 		switch(tolower(input)) {
@@ -83,6 +92,8 @@ void controlServer(int server)
 			default:
 				cout << "Misunderstood input, enter R, P, S, or E only:\n";
 		}
+
+		usleep(50000);	// Allows inputting multiple instructions on the same line with minimal risk as long as >>fadeMS
 
 		cin >> input;
 	}

@@ -12,12 +12,12 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	if (argc != 2) {
+	if (argc != 2) {	// Requires directory path
 		cerr << "Invalid option\n";
 		exit(-1);
 	}
 
-	music_list validmusic = findMusicFiles(argv[1]);
-	shuffleMusic(validmusic);
-	playMusic(validmusic, 250);
+	music_list validmusic = findMusicFiles(argv[1]);	// Find music
+	shuffleMusic(validmusic);	// Shuffle
+	playMusic(validmusic, 250);	// Play music with 250 ms fade in/out between songs
 }

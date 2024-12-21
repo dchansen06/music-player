@@ -6,9 +6,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <string>
 
-#ifndef CLIENT_FUNCTIONS_H
-	#define CLIENT_FUNCTIONS_H
-	int getInformation(std::string& path, std::string& dir, int argc, char* argv[]);
-	int setupServer(std::string path, std::string directory);
-	void controlServer(int server);
-#endif
+#pragma once
+
+int getInformation(std::string& path, std::string& dir, int argc, char* argv[]);
+int setupServer(std::string path, std::string directory);
+void controlServer(int server);

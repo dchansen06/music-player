@@ -14,12 +14,12 @@ int main(int argc, char* argv[])
 {
 	string path, directory;
 
-	int pidInput = getInformation(path, directory, argc, argv);
+	int pidInput = getInformation(path, directory, argc, argv);	// Collects and parses arguments
 
-	if (pidInput == 0)
+	if (pidInput == 0)	// No server given, must create one
 		pidInput = setupServer(path, directory);
 
-	controlServer(pidInput);
+	controlServer(pidInput);	// Loops until told to exit
 
 	return 0;
 }

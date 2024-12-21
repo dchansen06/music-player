@@ -6,13 +6,13 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <csignal>
 
-#ifndef SIGNALS_H
-#define SIGNALS_H
-	enum Control_Signals {
-		SKIP = SIGUSR1,
-		REWIND = SIGUSR2,
-		PAUSE = SIGTSTP,
-		RESUME = SIGCONT,
-		EXIT = SIGINT
-	};
-#endif
+#pragma once
+
+/* Configures given signals so that they can be replaced easily */
+enum Control_Signals {
+	SKIP = SIGUSR1,
+	REWIND = SIGUSR2,
+	PAUSE = SIGTSTP,
+	RESUME = SIGCONT,
+	EXIT = SIGINT
+};
