@@ -18,7 +18,7 @@ Please report any bugs or security issues.
 ## Installation
 Install the required dependencies with
 
-```$ sudo apt-get install -y --no-install-suggests --no-install-recommends libsdl2-mixer-dev```
+```$ sudo apt-get install --no-install-suggests --no-install-recommends libsdl2-mixer-dev libgtkmm-4.0-dev```
 
 Then simply run
 
@@ -27,5 +27,6 @@ Then simply run
 Use the client, server, and gui programs as you would expect, as this is not finalized the runtime instructions are not yet stable, please review the source code for further instructions (sorry).
 
 ## To-Do
-* Better documentation
+* Finish gui
 * Divide into more discrete functions and classes
+* Better documentation
